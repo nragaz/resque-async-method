@@ -1,0 +1,1 @@
+Resque.inline = true
