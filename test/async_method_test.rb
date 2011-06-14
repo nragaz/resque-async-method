@@ -15,4 +15,10 @@ class AsyncMethodTest < ActiveSupport::TestCase
     assert_equal [], user.long_method
     assert_equal 'success!', user.sync_long_method
   end
+  
+  test "lint" do
+    assert_nothing_raised do
+      Resque::Plugin.lint(Resque::Plugins::Async::Method)
+    end
+  end
 end

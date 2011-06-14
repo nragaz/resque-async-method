@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    resque-async-method (0.0.1)
+    resque-async-method (1.0.0)
       activesupport
       resque
 

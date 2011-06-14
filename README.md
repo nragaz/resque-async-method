@@ -3,6 +3,8 @@ Resque::Plugins::Async::Method
 
 Make Active Record instance methods asynchronous using [resque](http://www.github.com/defunkt/resque).
 
+Works with Resque >= 1.17.1. (Probably works with earlier versions too -- but why?)
+
 Usage
 -----
 
