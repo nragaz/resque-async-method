@@ -2,7 +2,7 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'rails', '3.1.0.rc4'
+gem 'rails', '~> 3.1'
 gem 'resque'
 
 # Bundle edge Rails instead:
