@@ -52,6 +52,6 @@ Sometimes it's nice to async a method that you're including from a module:
 
 Changelog
 ---------
-
+* 1.1.1: Switch to Rspec test suite.
 * 1.0.1: Update for latest Resque API (true returned from successful queue)
 * 1.0.0: Initial release
