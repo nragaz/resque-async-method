@@ -12,26 +12,25 @@ Usage
       # Not needed! This is done using a hook on ActiveRecord::Base.
       # include Resque::Plugins::Async::Method
 
-      def preprocess_avatar_for_a_long_time
+      def process_avatar
         # do stuff
       end
-      async_method :preprocess_avatar_for_a_long_time
+      async_method :process_avatar
 
-      def send_a_very_long_email
-        # do stuff
-      end
-      async_method :send_a_very_long_email, queue: 'emails'
     end
 
     u = User.find(1)
 
-    u.preprocess_avatar_for_a_long_time # => queued in 'users' queue
-    u.send_a_very_long_email # => queued in 'emails' queue
-    u.sync_send_a_very_long_email # => happens right away!
+    u.process_avatar # => queued in 'users' queue
+    
+	# You can call previous method in sync mode by :
+    u.sync_process_avatar # => happens right away!
 
 Note that in the test environment, none of this magic happens. You can test the expected output immediately.
 
 Method return values will change. `Resque.enqueue` will return `[]` from an async'ed method.
+
+## In Module extension
 
 Sometimes it's nice to async a method that you're including from a module:
 
@@ -49,9 +48,24 @@ Sometimes it's nice to async a method that you're including from a module:
       end
     end
 
+# Concurrently protection
+
+You can protect for concurrently processing in background
+
+For this, you must indicate which classes should not make any treatment concurrently :
+
+	class Resque::Plugins::Async::Worker
+		extend Resque::Plugins::Workers::Flag
+		flag_enqueued_records [ MyAwesomeClass ]
+	end
+
+place this code in your initializer, for example :
+
+	app/config/resque-async-method.rb  
 
 Changelog
 ---------
-
+* 1.2: Add flaging system
+* 1.1.1: Switch to Rspec test suite.
 * 1.0.1: Update for latest Resque API (true returned from successful queue)
 * 1.0.0: Initial release
