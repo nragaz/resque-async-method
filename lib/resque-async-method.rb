@@ -1,4 +1,6 @@
-require 'active_support/dependencies'
+require 'resque-async-method/version'
+require 'active_support/concern'
+require 'active_support/dependencies/autoload'
 
 module Resque
   module Plugins
