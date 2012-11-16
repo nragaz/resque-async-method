@@ -54,9 +54,11 @@ You can protect for concurrently processing in background
 
 For this, you must indicate which classes should not make any treatment concurrently :
 
-	class Resque::Plugins::Async::Worker
-		extend Resque::Plugins::Workers::Flag
-		flag_enqueued_records [ MyAwesomeClass ]
+	unless Resque.inline?
+		class Resque::Plugins::Async::Worker
+			extend Resque::Plugins::Workers::Flag
+			flag_enqueued_records [ MyAwesomeClass ]
+		end
 	end
 
 place this code in your initializer, for example :
