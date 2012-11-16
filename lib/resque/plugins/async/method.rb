@@ -1,4 +1,5 @@
 require 'resque/plugins/async/worker'
+require 'resque/plugins/async/flag'
 
 module Resque::Plugins::Async::Method
   extend ActiveSupport::Concern

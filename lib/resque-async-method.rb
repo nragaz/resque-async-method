@@ -7,6 +7,7 @@ module Resque
     module Async
       autoload :Method, 'resque/plugins/async/method'
       autoload :Worker, 'resque/plugins/async/worker'
+      autoload :Flag, 'resque/plugins/async/flag'
     end
   end
 end
