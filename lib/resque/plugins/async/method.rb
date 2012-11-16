@@ -6,12 +6,12 @@ module Resque::Plugins::Async::Method
   class NotPersistedError < StandardError; end
 
   module ClassMethods
+    
     def async_method(method_name, opts={})
-      # Allow tests to call sync_ methods ...
-      alias_method :"sync_#{method_name}", method_name
+      
+      alias_method :"sync_#{method_name}", method_name # Allow tests to call sync_ methods ...
 
-      # ... but don't actually make them asynchronous
-      return if Rails.env.test?
+      return if Rails.env.test? # ... but don't actually make them asynchronous
 
       define_method "#{method_name}" do |*args|
         raise NotPersistedError, "Methods can only be async'ed on persisted records (currently: #{inspect})" unless persisted?
