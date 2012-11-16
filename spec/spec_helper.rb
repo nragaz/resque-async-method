@@ -18,4 +18,9 @@ end
 
 # Avoid call Rails.env.test? => false
 class Env; def test?; false; end; end
-class Rails; def self.env; Env.new; end; end
+class Logger; def info(s); puts(s); end; end
+
+class Rails
+  def self.env; Env.new; end
+  def self.logger; Logger.new; end
+end
