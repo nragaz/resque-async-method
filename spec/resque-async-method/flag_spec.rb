@@ -4,7 +4,7 @@ describe Resque::Plugins::Async::Flag do
   class WatchableClass1 ; end
   class WatchableClass2 ; end
   class NonWatchableClass ; end
-  
+
   class TestJobClass
     extend Resque::Plugins::Async::Flag
     flag_enqueued_records [ WatchableClass1, WatchableClass2 ]
@@ -23,7 +23,7 @@ describe Resque::Plugins::Async::Flag do
             TestJobClass.class_eval do
               flag_enqueued_records invalid_value
             end
-          }.to raise_error
+          }.to raise_error Resque::Plugins::Async::Flag::InvalidSettingsError
         end
       end
     end
@@ -107,7 +107,7 @@ describe Resque::Plugins::Async::Flag do
         it "raises an error" do
           expect {
             subject
-          }.to raise_error
+          }.to raise_error Resque::Plugins::Async::Flag::FlaggedError
         end
       end
       context "when object was not flagged yet" do
