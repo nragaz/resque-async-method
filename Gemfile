@@ -1,13 +1,4 @@
-source "http://rubygems.org"
+source 'https://rubygems.org'
 
+# Specify your gem's dependencies in resque-async-method.gemspec
 gemspec
-
-gem 'rails', '~> 3.1'
-gem 'resque'
-
-# Bundle edge Rails instead:
-# gem 'rails',     :git => 'git://github.com/rails/rails.git'
-
-if RUBY_VERSION < '1.9'
-  gem "ruby-debug", ">= 0.10.3"
-end

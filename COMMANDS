@@ -1,0 +1,9 @@
+bundle && bundle exec rake spec
+gem build resque-async-method.gemspec 
+git tag -a v1.3 -m 'version 1.3'
+git push --tags
+gem push resque-async-method-1.3.gem 
+git push origin master
+
+extra:
+bundle exec rspec spec/resque-async-method/method_spec.rb -e 'Resque::Plugins::Async::Method for valid record with loner'
