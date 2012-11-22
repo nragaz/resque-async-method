@@ -54,19 +54,32 @@ You can protect for concurrently processing in background
 
 For this, you must indicate which classes should not make any treatment concurrently :
 
-	unless Resque.inline?
-		class Resque::Plugins::Async::Worker
-			extend Resque::Plugins::Workers::Flag
-			flag_enqueued_records [ MyAwesomeClass ]
-		end
-	end
+    class User < ActiveRecord::Base
+		...
 
-place this code in your initializer, for example :
+       def process_avatar
+        # do stuff
+      end
+      async_method :process_avatar, loner: true
 
-	app/config/resque-async-method.rb  
+    end
+
+You can also set a timeout in seconds, when you pass key :lock_timeout the key :loner is useless but you can set it anyway.
+
+    class User < ActiveRecord::Base
+		...
+
+       def process_avatar
+        # do stuff
+      end
+      async_method :process_avatar, lock_timeout: 3600
+
+    end
+
 
 Changelog
 ---------
+* 1.3: Technical enhancement, switch to plugin resque-lock-timeout
 * 1.2: Add flaging system
 * 1.1.1: Switch to Rspec test suite.
 * 1.0.1: Update for latest Resque API (true returned from successful queue)

@@ -6,6 +6,7 @@ require 'resque'
 require 'active_support/concern'
 require 'active_support/inflector'
 require 'active_support/dependencies/autoload'
+require 'resque-lock-timeout'
 require 'resque-async-method'
 
 RSpec.configure do |config|

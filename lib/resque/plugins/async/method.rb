@@ -1,5 +1,4 @@
 require 'resque/plugins/async/worker'
-require 'resque/plugins/async/flag'
 
 module Resque::Plugins::Async::Method
   extend ActiveSupport::Concern
@@ -8,24 +7,27 @@ module Resque::Plugins::Async::Method
 
   module ClassMethods
     
-    def async_method(method_name, opts={})
+    def async_method method_name, options = {}
       
+      puts "options => #{options}"
       alias_method :"sync_#{method_name}", method_name # Allow tests to call sync_ methods ...
 
       return if Rails.env.test? # ... but don't actually make them asynchronous
 
-      define_method "#{method_name}" do |*args|
-        raise NotPersistedError, "Methods can only be async'ed on persisted records (currently: #{inspect})" unless persisted?
+      define_method method_name do |*args|
+        raise NotPersistedError, "Methods can only be async'ed on persisted records (currently: #{inspect})" unless self.persisted?
 
-        my_klass       = Resque::Plugins::Async::Worker
-        my_klass.queue = opts[:queue] ||
-                         send(:class).name.underscore.pluralize
+        my_klass              = Resque::Plugins::Async::Worker
+        my_klass.queue        = options[:queue] || __send__(:class).name.underscore.pluralize.to_sym
+        my_klass.loner        = options[:loner] || false
+        my_klass.lock_timeout = options[:lock_timeout] || 0
+        my_klass.loner = true if my_klass.lock_timeout > 0 # Magick config
 
         Resque.enqueue(
           my_klass,
-          send(:class).name,
-          send(:id),
-          :"sync_#{method_name}",
+          __send__(:class).name,
+          __send__(:id),
+          "sync_#{method_name}".to_sym,
           *args
         )
       end

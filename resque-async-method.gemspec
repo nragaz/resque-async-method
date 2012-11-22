@@ -17,6 +17,7 @@ Gem::Specification.new do |gem|
   gem.version       = ResqueAsyncMethod::VERSION
 
   gem.add_runtime_dependency 'resque'
+  gem.add_runtime_dependency 'resque-lock-timeout'
   gem.add_runtime_dependency 'activesupport'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'rake'
