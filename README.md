@@ -22,7 +22,7 @@ Usage
     u = User.find(1)
 
     u.process_avatar # => queued in 'users' queue
-    
+
 	# You can call previous method in sync mode by :
     u.sync_process_avatar # => happens right away!
 
@@ -56,14 +56,14 @@ For this, you must indicate which classes should not make any treatment concurre
 
 	unless Resque.inline?
 		class Resque::Plugins::Async::Worker
-			extend Resque::Plugins::Workers::Flag
+			extend Resque::Plugins::Async::Flag
 			flag_enqueued_records [ MyAwesomeClass ]
 		end
 	end
 
 place this code in your initializer, for example :
 
-	app/config/resque-async-method.rb  
+	app/config/resque-async-method.rb
 
 Changelog
 ---------
