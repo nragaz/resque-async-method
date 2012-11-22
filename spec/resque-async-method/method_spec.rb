@@ -6,10 +6,7 @@ describe Resque::Plugins::Async::Method do
     
     subject { MyKlass.new }
     
-    before do
-      Rails.env.stub test?: false
-      subject.stub persisted?: true, id: 42
-    end
+    before { Rails.env.stub test?: false }
     
     context 'with simple class' do
       
@@ -20,6 +17,14 @@ describe Resque::Plugins::Async::Method do
           'bar'
         end
         async_method :foo
+        
+        def persisted?
+          true
+        end
+        
+        def id
+          42
+        end
       end
 
       it { MyKlass.respond_to?(:async_method).should be_true }
@@ -45,57 +50,7 @@ describe Resque::Plugins::Async::Method do
         
       end
       
-    end # context 'with simple class' do
-    
-    context 'with queue named', pending: true do
-    
-      class MyKlass
-        include Resque::Plugins::Async::Method
-    
-        def foo
-          'bar'
-        end
-        async_method :foo, queue: :bar
-      end
-      
-      it { Resque::Plugins::Async::Worker.queue.should eql(:bar) }
-      it { Resque::Plugins::Async::Worker.loner.should be_false }
-      it { Resque::Plugins::Async::Worker.lock_timeout.should eql(0) }
-    
     end  
 
-    context 'with loner', pending: true do
-    
-      class MyKlass
-        include Resque::Plugins::Async::Method
-    
-        def foo
-          'bar'
-        end
-        async_method :foo, loner: true
-      end
-
-      it { Resque::Plugins::Async::Worker.queue.should eql(:my_klasses) }
-      it { Resque::Plugins::Async::Worker.loner.should be_true }
-      it { Resque::Plugins::Async::Worker.lock_timeout.should eql(0) }
-    
-    end  
-
-    context 'with lock_timeout' do
-    
-      class MyKlass
-        include Resque::Plugins::Async::Method
-    
-        def foo
-          'bar'
-        end
-        async_method :foo, lock_timeout: 2345
-      end
-
-      it { Resque::Plugins::Async::Worker.queue.should eql(:my_klasses) }
-      it { Resque::Plugins::Async::Worker.loner.should be_true }
-      it { Resque::Plugins::Async::Worker.lock_timeout.should eql(2345) }
-    
-    end  
   end
 end
