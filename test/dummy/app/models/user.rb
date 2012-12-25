@@ -26,4 +26,10 @@ class User < ActiveRecord::Base
     return "success!"
   end
   async_method :another_long_method
+
+  def kiss(other_user)
+    return "#{self.name} kissed #{other_user.name}"
+  end
+
+  async_method :kiss
 end

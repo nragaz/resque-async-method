@@ -25,6 +25,15 @@ class AsyncMethodTest < ActiveSupport::TestCase
     assert_equal true, User.class_methods_with_awesome_vars(1,2)
     assert_equal 3, User.sync_class_methods_with_awesome_vars(1,2)
   end
+
+  test "enqueue method with object parameters" do 
+    user1 = User.first
+    user2 = User.last
+
+    assert_equal true, user1.kiss(user2)
+    assert_equal "#{user1.name} kissed #{user2.name}", user1.sync_kiss(user2)
+  end
+
   test "raise error if not persisted" do
     user = User.new
 

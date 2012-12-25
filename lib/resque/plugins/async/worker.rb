@@ -10,6 +10,13 @@ class Resque::Plugins::Async::Worker
   end
   
   def self.perform(klass, *args)
-    klass.constantize.find(args.shift).send(args.shift, *args)
+    arguments = args.map { |arg|
+      if arg.is_a?(Hash) && arg.has_key?("_obj_class_name") && arg.has_key?("_obj_id")
+        arg["_obj_class_name"].constantize.find(arg["_obj_id"])
+      else
+        arg
+      end
+    }
+    klass.constantize.find(arguments.shift).send(arguments.shift, *arguments)
   end
 end

@@ -23,6 +23,15 @@ module Resque::Plugins::Async::Method
         my_klass.queue = opts[:queue] ||
                          send(:class).name.underscore.pluralize
 
+        # Convert AR::Base params to hash directive, restored in Worker and ClassWorker
+        *args = *args.map do |arg|
+          if arg.kind_of?(ActiveRecord::Base)
+            {"_obj_class_name" => arg.class.name, "_obj_id" => arg.id}
+          else
+            arg
+          end
+        end
+
         Resque.enqueue(
           my_klass,
           self.name,
@@ -46,6 +55,14 @@ module Resque::Plugins::Async::Method
         my_klass.queue = opts[:queue] ||
                          send(:class).name.underscore.pluralize
 
+        *args = *args.map do |arg|
+          if arg.kind_of?(ActiveRecord::Base)
+            {"_obj_class_name" => arg.class.name, "_obj_id" => arg.id}
+          else
+            arg
+          end
+        end
+        
         Resque.enqueue(
           my_klass,
           send(:class).name,
