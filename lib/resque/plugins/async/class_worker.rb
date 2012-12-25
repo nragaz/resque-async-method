@@ -1,5 +1,5 @@
-class Resque::Plugins::Async::Worker
-  @queue = :async_methods
+class Resque::Plugins::Async::ClassWorker
+  @queue = :async_class_methods
   
   def self.queue=(name)
     @queue = name
@@ -17,6 +17,6 @@ class Resque::Plugins::Async::Worker
         arg
       end
     }
-    klass.constantize.find(arguments.shift).send(arguments.shift, *arguments)
+    klass.constantize.send(arguments.shift, *arguments)
   end
 end

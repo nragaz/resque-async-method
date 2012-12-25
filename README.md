@@ -21,6 +21,13 @@ Usage
         # do stuff
       end
       async_method :send_a_very_long_email, queue: 'emails'
+
+      # And for class methods
+      def User.send_all_emails
+        # do stuff
+      end
+
+      async_class_method :send_all_emails, queue: "emails"
     end
 
     u = User.find(1)
