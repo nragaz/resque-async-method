@@ -16,6 +16,15 @@ class AsyncMethodTest < ActiveSupport::TestCase
     assert_equal 'success!', user.sync_long_method
   end
 
+  test "enqueue class jobs" do
+    assert_equal true, User.class_method_is_awesome
+    assert_equal "success!", User.sync_class_method_is_awesome
+  end
+
+  test "enqueue class jobs with params" do
+    assert_equal true, User.class_methods_with_awesome_vars(1,2)
+    assert_equal 3, User.sync_class_methods_with_awesome_vars(1,2)
+  end
   test "raise error if not persisted" do
     user = User.new
 

@@ -6,6 +6,32 @@ module Resque::Plugins::Async::Method
   class NotPersistedError < StandardError; end
 
   module ClassMethods
+
+    def async_class_method(method_name, opts={})
+      # Allow tests to call sync_ methods ...
+
+      eval(%Q{
+      class << self
+        alias_method :sync_#{method_name}, :#{method_name}
+      end})
+
+      # ... but don't actually make them asynchronous
+     # return if Rails.env.test?
+      define_singleton_method "#{method_name}" do |*args|
+        
+        my_klass       = Resque::Plugins::Async::ClassWorker
+        my_klass.queue = opts[:queue] ||
+                         send(:class).name.underscore.pluralize
+
+        Resque.enqueue(
+          my_klass,
+          self.name,
+          :"sync_#{method_name}",
+          *args
+        )
+      end
+    end
+
     def async_method(method_name, opts={})
       # Allow tests to call sync_ methods ...
       alias_method :"sync_#{method_name}", method_name
