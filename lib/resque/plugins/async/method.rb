@@ -12,7 +12,7 @@ module Resque::Plugins::Async::Method
 
       eval(%Q{
       class << self
-        alias_method :sync_#{method_name}, :#{method_name}
+        alias_method :#{method_name}_without_enqueue, :#{method_name}
       end})
 
       # ... but don't actually make them asynchronous
@@ -35,7 +35,7 @@ module Resque::Plugins::Async::Method
         Resque.enqueue(
           my_klass,
           self.name,
-          :"sync_#{method_name}",
+          :"#{method_name}_without_enqueue",
           *args
         )
       end
@@ -43,7 +43,7 @@ module Resque::Plugins::Async::Method
 
     def async_method(method_name, opts={})
       # Allow tests to call sync_ methods ...
-      alias_method :"sync_#{method_name}", method_name
+      alias_method :"#{method_name}_without_enqueue", method_name
 
       # ... but don't actually make them asynchronous
       return if Rails.env.test?
@@ -67,7 +67,7 @@ module Resque::Plugins::Async::Method
           my_klass,
           send(:class).name,
           send(:id),
-          :"sync_#{method_name}",
+          :"#{method_name}_without_enqueue",
           *args
         )
       end
