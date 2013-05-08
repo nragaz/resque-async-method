@@ -46,7 +46,7 @@ module Resque::Plugins::Async::Method
       alias_method :"#{method_name}_without_enqueue", method_name
 
       # ... but don't actually make them asynchronous
-      return if Rails.env.test?
+      return if Rails.env.test? || (defined?(RESQUE_ASYNCH_BYPASS) && RESQUE_ASYNCH_BYPASS)
 
       define_method "#{method_name}" do |*args|
         raise NotPersistedError, "Methods can only be async'ed on persisted records (currently: #{inspect})" unless persisted?

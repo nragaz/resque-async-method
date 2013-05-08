@@ -57,6 +57,12 @@ Sometimes it's nice to async a method that you're including from a module:
     end
 
 
+To bypass asynch calls, for instance, in development mode, create an intilizer in your app that will be used to set up the following:
+    
+    ##initilizers/resque_asynch.rb
+    RESQUE_ASYNCH_BYPASS = true if Rails.env.development?
+
+
 Changelog
 ---------
 
