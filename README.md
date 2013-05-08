@@ -21,6 +21,13 @@ Usage
         # do stuff
       end
       async_method :send_a_very_long_email, queue: 'emails'
+
+      # And for class methods
+      def User.send_all_emails
+        # do stuff
+      end
+
+      async_class_method :send_all_emails, queue: "emails"
     end
 
     u = User.find(1)
@@ -48,6 +55,12 @@ Sometimes it's nice to async a method that you're including from a module:
         # do stuff
       end
     end
+
+
+To bypass asynch calls, for instance, in development mode, create an intilizer in your app that will be used to set up the following:
+    
+    ##initilizers/resque_asynch.rb
+    RESQUE_ASYNCH_BYPASS = true if Rails.env.development?
 
 
 Changelog
